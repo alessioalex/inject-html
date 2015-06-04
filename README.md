@@ -2,6 +2,8 @@
 
 Node module for injecting HTML code before or after the `body` tag into the response.
 
+[![Build Status](https://travis-ci.org/alessioalex/inject-html.svg)](https://travis-ci.org/alessioalex/inject-html)
+
 ## usage
 
 Installable via npm: `npm i inject-html`.
