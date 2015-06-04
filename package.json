@@ -1,0 +1,40 @@
+{
+  "name": "inject-html",
+  "version": "1.0.0",
+  "description": "Node module for injecting HTML code before or after the `body` tag into the response.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "debug": "^2.2.0",
+    "trumpet": "^1.7.1",
+    "through2": "^0.6.5",
+    "response-spy": "^0.0.2",
+    "mime-types": "^2.0.13"
+  },
+  "devDependencies": {
+    "connected": "0.0.2",
+    "get-port": "^1.0.0",
+    "hyperquest": "^1.2.0",
+    "tape": "^4.0.0"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alessioalex/inject-html.git"
+  },
+  "keywords": [
+    "inject",
+    "html",
+    "inject-html"
+  ],
+  "author": "Alexandru Vladutu",
+  "bugs": {
+    "url": "https://github.com/alessioalex/inject-html/issues"
+  },
+  "homepage": "https://github.com/alessioalex/inject-html",
+  "license": "MIT"
+}
