@@ -1,9 +1,9 @@
-"use strict";
+/*eslint-disable no-console, func-names*/
+'use strict';
 
 var fs = require('fs');
 var http = require('http');
 var injectCode = require('../');
-var PORT = process.env.PORT || 1337;
 var hyperquest = require('hyperquest');
 var getPort = require('get-port');
 var connected = require('connected');
@@ -30,8 +30,8 @@ getPort(function(err, port) {
     });
   });
 
-  connected(server, port, function(err) {
-    if (err) { throw err; }
+  connected(server, port, function(e) {
+    if (e) { throw err; }
 
     console.log('\n--------------------');
     console.log('BEFORE\n--------------------\n');

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var debug = require('debug')('inject-html');
 var assert = require('assert');
@@ -7,7 +7,7 @@ var trumpet = require('trumpet');
 var mime = require('mime-types');
 var through2 = require('through2');
 var overrideResponse = require('./lib/response-overrider');
-var noop = function() {};
+var noop = function noop() {};
 
 function injectHtml(opts) {
   assert(opts, 'missing options param');
@@ -15,10 +15,9 @@ function injectHtml(opts) {
 
   opts.type = opts.type || 'prepend';
 
-  return function injectCode(req, res, next) {
+  return function injectCode(req, res, nextCb) {
     var mimeType = mime.lookup(req.url);
-
-    next = next || noop;
+    var next = nextCb || noop;
 
     if ((mimeType !== false) && (mimeType !== 'text/html')) {
       return next();
@@ -29,9 +28,12 @@ function injectHtml(opts) {
     var originalResFns = overrideResponse(res);
     var stream = interceptRes(res);
 
-    stream.on('headers', function(headers, statusCode) {
+    stream.on('headers', function streamRes(headers, statusCode) {
       var isHtml = /text\/html/ig.test(headers['content-type']);
-      delete headers['content-length'] && res.removeHeader('Content-Length');
+
+      delete headers['content-length'];
+      res.removeHeader('Content-Length');
+
       originalResFns.writeHead(statusCode, headers);
 
       if (isHtml) {
@@ -39,7 +41,7 @@ function injectHtml(opts) {
 
         var tr = trumpet();
 
-        tr.select('body', function(body) {
+        tr.select('body', function selectBodyTag(body) {
           var bodyStream = body.createStream();
 
           if (opts.type === 'prepend') {
@@ -51,8 +53,8 @@ function injectHtml(opts) {
             debug('append');
 
             bodyStream.pipe(through2(
-              function(chunk, enc, cb) { cb(null, chunk) }, // transform is a noop
-              function(cb) { // flush function
+              function pushChunk(chunk, enc, cb) { cb(null, chunk); }, // transform is a noop
+              function flush(cb) { // flush function
                 this.push(opts.code);
                 cb();
               }
@@ -62,7 +64,7 @@ function injectHtml(opts) {
 
         stream.pipe(tr);
 
-        tr.on('data', function(chunk) {
+        tr.on('data', function writeChunk(chunk) {
           originalResFns.write(chunk.toString('utf8'));
         });
 
@@ -71,11 +73,6 @@ function injectHtml(opts) {
         stream.on('data', originalResFns.write);
         stream.on('end', originalResFns.end);
       }
-    });
-
-    stream.on('error', function(err) {
-      console.error('response-spy stream error');
-      throw err;
     });
 
     next();
