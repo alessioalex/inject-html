@@ -31,7 +31,7 @@ function injectHtml(opts) {
 
     stream.on('headers', function(headers, statusCode) {
       var isHtml = /text\/html/ig.test(headers['content-type']);
-      delete headers['content-length'];
+      delete headers['content-length'] && res.removeHeader('Content-Length');
       originalResFns.writeHead(statusCode, headers);
 
       if (isHtml) {
