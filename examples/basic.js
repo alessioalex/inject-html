@@ -7,6 +7,7 @@ var injectCode = require('../');
 var hyperquest = require('hyperquest');
 var getPort = require('get-port');
 var connected = require('connected');
+var zlib = require('zlib');
 
 var inject = injectCode({
   // type: 'append', // default 'prepend'
@@ -22,7 +23,11 @@ getPort(function(err, port) {
       res.setHeader('Content-Type', 'text/html');
 
       if (req.url === '/') {
-        fs.createReadStream(__dirname + '/page.html').pipe(res);
+        res.setHeader('Content-Encoding', 'gzip');
+
+        fs.createReadStream(__dirname + '/page.html')
+          .pipe(zlib.createGzip())
+          .pipe(res);
       } else {
         res.statusCode = 404;
         res.end('Page Not Found\n');

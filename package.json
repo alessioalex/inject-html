@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "debug": "^2.2.0",
+    "gunzip-maybe": "1.4.0",
     "husky": "^0.8.1",
     "mime-types": "^2.0.13",
     "response-spy": "~0.0.x",

@@ -62,9 +62,10 @@ after injecting:
 </html>
 ```
 
-## note
+## caveats
 
 If the content doesn't have a `<body>` tag, this module __will not function properly__.
+This module will delete the `content-length` and `content-encoding` (if gzip/inflate) headers.
 
 ## license
 

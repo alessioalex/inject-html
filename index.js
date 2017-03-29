@@ -6,6 +6,7 @@ var interceptRes = require('response-spy');
 var trumpet = require('trumpet');
 var mime = require('mime-types');
 var through2 = require('through2');
+var gunzip = require('gunzip-maybe');
 var overrideResponse = require('./lib/response-overrider');
 var noop = function noop() {};
 
@@ -33,6 +34,11 @@ function injectHtml(opts) {
 
       delete headers['content-length'];
       res.removeHeader('Content-Length');
+
+      if (['gzip', 'deflate'].indexOf(headers['content-encoding']) !== -1) {
+        delete headers['content-encoding'];
+        res.removeHeader('content-encoding');
+      }
 
       originalResFns.writeHead(statusCode, headers);
 
@@ -62,7 +68,7 @@ function injectHtml(opts) {
           }
         });
 
-        stream.pipe(tr);
+        stream.pipe(gunzip()).pipe(tr);
 
         tr.on('data', function writeChunk(chunk) {
           originalResFns.write(chunk.toString('utf8'));
