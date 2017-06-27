@@ -1,5 +1,6 @@
 'use strict';
 
+var url = require('url');
 var debug = require('debug')('inject-html');
 var assert = require('assert');
 var interceptRes = require('response-spy');
@@ -17,7 +18,7 @@ function injectHtml(opts) {
   opts.type = opts.type || 'prepend';
 
   return function injectCode(req, res, nextCb) {
-    var mimeType = mime.lookup(req.url);
+    var mimeType = mime.lookup(url.parse(req.url).pathname);
     var next = nextCb || noop;
 
     if ((mimeType !== false) && (mimeType !== 'text/html')) {
