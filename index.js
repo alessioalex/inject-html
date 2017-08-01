@@ -36,7 +36,7 @@ function injectHtml(opts) {
       delete headers['content-length'];
       res.removeHeader('Content-Length');
 
-      if (['gzip', 'deflate'].indexOf(headers['content-encoding']) !== -1) {
+      if (isHtml && ['gzip', 'deflate'].indexOf(headers['content-encoding']) !== -1) {
         delete headers['content-encoding'];
         res.removeHeader('content-encoding');
       }
